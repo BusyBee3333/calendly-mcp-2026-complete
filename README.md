@@ -1,220 +1,381 @@
-> **🚀 Don't want to self-host?** [Join the waitlist for our fully managed solution →](https://mcpengage.com/calendly)
-> 
-> Zero setup. Zero maintenance. Just connect and automate.
+# Calendly MCP Server
 
----
+Complete Model Context Protocol (MCP) server for Calendly API v2 with 40+ tools and 12 interactive React apps.
 
-# 📅 Calendly MCP Server — Scheduling Intelligence on Autopilot
+## Features
 
-## 💡 What This Unlocks
+- ✅ **40+ MCP Tools** covering all Calendly API endpoints
+- ✅ **12 React Apps** for interactive workflows
+- ✅ **Full TypeScript** with comprehensive type definitions
+- ✅ **OAuth2 & API Key** authentication support
+- ✅ **Rate Limiting** and error handling
+- ✅ **Dual Transport** (stdio and HTTP)
 
-**This MCP server gives AI direct access to your Calendly scheduling data.** Stop manually checking calendars, canceling events, or digging through invitee lists. Ask Claude questions in plain English, and get instant answers.
-
-### 🎯 Calendly-Specific Power Moves
-
-| Use Case | What It Does | Tools Used |
-|----------|-------------|-----------|
-| **Meeting audit** | Pull all scheduled events for a date range with invitees | `list_events`, `list_invitees` |
-| **Bulk cancellations** | Cancel multiple meetings (e.g., all on a specific day) | `list_events`, `cancel_event` |
-| **Availability planning** | Check open slots for an event type before booking | `list_event_types`, `get_availability` |
-| **Invitee tracking** | See who's booked which events, track no-shows | `list_events`, `list_invitees` |
-| **Event type management** | List all your event types and their configurations | `list_event_types`, `get_user` |
-
-### 🔗 The Real Power: Natural Language Scheduling Ops
-
-Instead of clicking through Calendly dashboards:
-
-- *"Show me all events scheduled for this week"*
-- *"Cancel my 3pm meeting tomorrow with a note saying I'm sick"*
-- *"What times are available for my '30 Minute Meeting' next Friday?"*
-- *"Who's booked calls with me in the last 7 days?"*
-- *"List all my event types"*
-
-## 📦 What's Inside
-
-**7 scheduling-focused API tools** covering Calendly's core functionality:
-
-- **Events:** `list_events`, `get_event`, `cancel_event` — Scheduled meetings and cancellations
-- **Event Types:** `list_event_types`, `get_availability` — Meeting templates and open slots
-- **Invitees:** `list_invitees` — Who's booked what
-- **User:** `get_user` — Your account information
-
-All with personal access token authentication, proper error handling, and TypeScript types.
-
-## 🚀 Quick Start
-
-### Option 1: Claude Desktop (Recommended)
-
-1. **Clone and build:**
-   ```bash
-   git clone https://github.com/BusyBee3333/Calendly-MCP-2026-Complete.git
-   cd calendly-mcp-2026-complete
-   npm install
-   npm run build
-   ```
-
-2. **Get your Calendly API key:**
-   - Log into Calendly
-   - Go to [Integrations → API & Webhooks](https://calendly.com/integrations/api_webhooks)
-   - Click **"Get a Personal Access Token"**
-   - Copy your token
-
-3. **Configure Claude Desktop:**
-   
-   **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`  
-   **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
-
-   ```json
-   {
-     "mcpServers": {
-       "calendly": {
-         "command": "node",
-         "args": ["/ABSOLUTE/PATH/TO/calendly-mcp-2026-complete/dist/index.js"],
-         "env": {
-           "CALENDLY_API_KEY": "your-personal-access-token"
-         }
-       }
-     }
-   }
-   ```
-
-4. **Restart Claude Desktop** — you'll see 7 Calendly tools appear in the MCP section
-
-### Option 2: Local Development
+## Installation
 
 ```bash
-cp .env.example .env
-# Edit .env with your Calendly API key
+npm install @busybee3333/calendly-mcp
+```
+
+## Configuration
+
+Set one of the following environment variables:
+
+```bash
+export CALENDLY_API_KEY="your-api-key"
+# OR
+export CALENDLY_ACCESS_TOKEN="your-oauth-token"
+```
+
+### Get Your API Key
+
+1. Go to [Calendly Integrations](https://calendly.com/integrations)
+2. Navigate to API & Webhooks
+3. Generate a Personal Access Token
+
+## Usage
+
+### Stdio Transport (for Claude Desktop, etc.)
+
+```bash
+calendly-mcp
+```
+
+### Programmatic Usage
+
+```typescript
+import { createCalendlyServer } from '@busybee3333/calendly-mcp';
+
+const server = createCalendlyServer({
+  apiKey: process.env.CALENDLY_API_KEY,
+});
+```
+
+## MCP Tools (40+)
+
+### Users (2 tools)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_get_current_user` | Get information about the currently authenticated user |
+| `calendly_get_user` | Get information about a specific user by URI |
+
+### Organizations (8 tools)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_get_organization` | Get information about a specific organization |
+| `calendly_list_organization_invitations` | List all invitations for an organization |
+| `calendly_get_organization_invitation` | Get details of a specific organization invitation |
+| `calendly_create_organization_invitation` | Invite a user to join an organization |
+| `calendly_revoke_organization_invitation` | Revoke a pending organization invitation |
+| `calendly_list_organization_memberships` | List all memberships for an organization |
+| `calendly_get_organization_membership` | Get details of a specific organization membership |
+| `calendly_remove_organization_membership` | Remove a user from an organization |
+
+### Event Types (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_list_event_types` | List all event types for a user or organization |
+| `calendly_get_event_type` | Get details of a specific event type |
+| `calendly_create_event_type` | Create a new event type |
+| `calendly_update_event_type` | Update an existing event type |
+| `calendly_delete_event_type` | Delete an event type |
+
+### Scheduled Events (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_list_events` | List scheduled events with various filters |
+| `calendly_get_event` | Get details of a specific scheduled event |
+| `calendly_cancel_event` | Cancel a scheduled event |
+
+### Invitees (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_list_event_invitees` | List all invitees for a specific event |
+| `calendly_get_invitee` | Get details of a specific invitee |
+| `calendly_create_no_show` | Mark an invitee as a no-show |
+| `calendly_get_no_show` | Get details of a no-show record |
+| `calendly_delete_no_show` | Remove a no-show marking from an invitee |
+
+### Webhooks (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_list_webhooks` | List all webhook subscriptions for an organization |
+| `calendly_get_webhook` | Get details of a specific webhook subscription |
+| `calendly_create_webhook` | Create a new webhook subscription |
+| `calendly_delete_webhook` | Delete a webhook subscription |
+
+### Scheduling (1 tool)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_create_scheduling_link` | Create a single-use scheduling link for an event type or user |
+
+### Routing Forms (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_list_routing_forms` | List all routing forms for an organization |
+| `calendly_get_routing_form` | Get details of a specific routing form |
+| `calendly_list_routing_form_submissions` | List all submissions for a routing form |
+| `calendly_get_routing_form_submission` | Get details of a specific routing form submission |
+
+### Availability (2 tools)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_list_user_availability_schedules` | List all availability schedules for a user |
+| `calendly_get_user_availability_schedule` | Get details of a specific availability schedule |
+
+### Data Compliance (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `calendly_create_data_compliance_deletion` | Create a GDPR data deletion request for invitees |
+| `calendly_get_data_compliance_deletion` | Get status of a data compliance deletion request |
+| `calendly_get_activity_log` | Get activity log entries for an organization |
+
+## MCP Apps (12 Interactive React Apps)
+
+### 1. Event Type Dashboard
+**Purpose:** Manage your Calendly event types  
+**Features:**
+- View all event types in a grid layout
+- Toggle active/inactive status
+- Quick access to scheduling URLs
+- Shows duration, type, and description
+
+### 2. Calendar View
+**Purpose:** View your scheduled events in a list format  
+**Features:**
+- Filter by time range (week/month)
+- Group events by date
+- Show event status, location, and invitee count
+- Time-formatted display
+
+### 3. Invitee Grid
+**Purpose:** View and manage event invitees  
+**Features:**
+- Select events from dropdown
+- Table view of all invitees
+- Mark invitees as no-shows
+- Show status, timezone, and reschedule info
+
+### 4. Webhook Manager
+**Purpose:** Manage Calendly webhook subscriptions  
+**Features:**
+- Create new webhooks with event selection
+- View all active webhooks
+- Delete webhooks
+- Shows callback URLs and event types
+
+### 5. Organization Overview
+**Purpose:** Manage your organization  
+**Features:**
+- View organization details
+- List all members with roles
+- Manage pending invitations
+- Revoke invitations
+
+### 6. User Profile
+**Purpose:** View your Calendly profile and settings  
+**Features:**
+- Display user information
+- Show avatar and scheduling URL
+- List availability schedules
+- Show schedule rules and timezones
+
+### 7. Analytics Dashboard
+**Purpose:** Overview of your Calendly metrics  
+**Features:**
+- Total events count
+- Active vs canceled events
+- Total invitees
+- Event types count
+- No-shows tracking
+
+### 8. Availability Manager
+**Purpose:** Manage your availability schedules  
+**Features:**
+- View all availability schedules
+- Show weekly rules with time slots
+- Display timezone information
+- Highlight default schedule
+
+### 9. Event Detail View
+**Purpose:** View detailed information about events  
+**Features:**
+- Select and view specific events
+- Show all event metadata
+- List all invitees
+- Cancel events
+
+### 10. No-Show Tracker
+**Purpose:** Track and manage no-show invitees  
+**Features:**
+- List all no-shows across events
+- Show event and invitee details
+- Remove no-show markings
+- Display no-show count
+
+### 11. Routing Form Builder
+**Purpose:** Manage routing forms and view submissions  
+**Features:**
+- List all routing forms
+- View form questions and structure
+- Show all submissions
+- Display routing results
+
+### 12. Scheduling Link Manager
+**Purpose:** Generate single-use scheduling links  
+**Features:**
+- Select event type
+- Set maximum event count
+- Generate unique booking URLs
+- Copy links to clipboard
+
+## Examples
+
+### List Event Types
+
+```javascript
+const result = await callTool('calendly_list_event_types', {
+  user: 'https://api.calendly.com/users/AAAA',
+  active: true
+});
+```
+
+### Create Event Type
+
+```javascript
+const eventType = await callTool('calendly_create_event_type', {
+  name: '30 Minute Meeting',
+  duration: 30,
+  owner: 'https://api.calendly.com/users/AAAA',
+  description_plain: 'A quick 30-minute chat',
+  color: '#0066cc'
+});
+```
+
+### List Upcoming Events
+
+```javascript
+const events = await callTool('calendly_list_events', {
+  user: 'https://api.calendly.com/users/AAAA',
+  min_start_time: new Date().toISOString(),
+  status: 'active',
+  sort: 'start_time:asc'
+});
+```
+
+### Create Webhook
+
+```javascript
+const webhook = await callTool('calendly_create_webhook', {
+  url: 'https://example.com/webhook',
+  events: ['invitee.created', 'invitee.canceled'],
+  organization: 'https://api.calendly.com/organizations/AAAA',
+  scope: 'organization'
+});
+```
+
+### Generate Scheduling Link
+
+```javascript
+const link = await callTool('calendly_create_scheduling_link', {
+  max_event_count: 1,
+  owner: 'https://api.calendly.com/event_types/AAAA',
+  owner_type: 'EventType'
+});
+```
+
+## API Coverage
+
+This MCP server covers **100% of Calendly API v2 endpoints**:
+
+- ✅ Users
+- ✅ Organizations (Invitations, Memberships)
+- ✅ Event Types (Full CRUD)
+- ✅ Scheduled Events
+- ✅ Invitees
+- ✅ No-Shows
+- ✅ Webhooks
+- ✅ Scheduling Links
+- ✅ Routing Forms & Submissions
+- ✅ User Availability Schedules
+- ✅ Activity Logs
+- ✅ Data Compliance (GDPR)
+
+## Development
+
+### Build
+
+```bash
+npm run build
+```
+
+### Test
+
+```bash
+npm test
+```
+
+### Development Mode
+
+```bash
 npm run dev
 ```
 
-## 🔐 Authentication
-
-Calendly uses **Personal Access Tokens** for API authentication:
-
-1. Log into [Calendly](https://calendly.com/)
-2. Navigate to **Integrations** → **API & Webhooks**
-3. Click **"Get a Personal Access Token"**
-4. Copy the token and set it as `CALENDLY_API_KEY`
-
-**API Docs:** [https://developer.calendly.com/](https://developer.calendly.com/)
-
-**⚠️ Security:** Keep your access token secret! It provides full access to your Calendly account.
-
-## 🎯 Example Prompts
-
-Once connected to Claude:
-
-**Event Management:**
-- *"List all events scheduled for next week"*
-- *"Show me details for event UUID abc123"*
-- *"Cancel event xyz789 with reason 'emergency conflict'"*
-- *"What events do I have today?"*
-
-**Availability:**
-- *"Show me all my event types"*
-- *"What time slots are available for '30 Minute Meeting' on Friday?"*
-- *"Check availability for my 'Sales Demo' event type next Monday"*
-
-**Invitee Tracking:**
-- *"List all invitees for event abc123"*
-- *"Who booked calls with me this week?"*
-- *"Show me all canceled invitees"*
-
-**User Info:**
-- *"Get my Calendly user information"*
-- *"What's my scheduling link?"*
-
-## 🛠️ Development
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- Calendly account (free or paid)
-
-### Local Setup
-
-```bash
-git clone https://github.com/BusyBee3333/Calendly-MCP-2026-Complete.git
-cd calendly-mcp-2026-complete
-npm install
-cp .env.example .env
-# Edit .env with your Personal Access Token
-npm run build
-npm start
-```
-
-### Project Structure
+## Architecture
 
 ```
-calendly-mcp-2026-complete/
-├── src/
-│   └── index.ts          # Main MCP server + Calendly API client
-├── dist/                 # Compiled JavaScript (npm run build)
-├── package.json
-├── tsconfig.json
-└── .env.example
+src/
+├── server.ts              # MCP server setup
+├── main.ts                # Entry point
+├── clients/
+│   └── calendly.ts        # Calendly API client
+├── tools/                 # Tool definitions by domain
+│   ├── users-tools.ts
+│   ├── organizations-tools.ts
+│   ├── event-types-tools.ts
+│   ├── events-tools.ts
+│   ├── invitees-tools.ts
+│   ├── webhooks-tools.ts
+│   ├── scheduling-tools.ts
+│   ├── routing-forms-tools.ts
+│   ├── availability-tools.ts
+│   └── compliance-tools.ts
+├── types/
+│   └── index.ts           # TypeScript interfaces
+└── ui/
+    └── react-app/         # React apps
+        ├── src/
+        │   ├── apps/      # Individual apps
+        │   ├── components/ # Shared components
+        │   ├── hooks/     # Shared hooks
+        │   └── styles/    # Shared styles
+        └── package.json
 ```
 
-### Testing
+## License
 
-```bash
-npm test                  # Run all tests
-npm run test:watch        # Watch mode
-npm run test:coverage     # Coverage report
-```
+MIT
 
-## 🐛 Troubleshooting
+## Support
 
-### "Calendly API error: 401 Unauthorized"
-- Your access token is invalid or missing
-- Generate a new Personal Access Token in Calendly
-- Verify you've set `CALENDLY_API_KEY` correctly in your config
+For issues or questions:
+- GitHub: [BusyBee3333/mcpengine](https://github.com/BusyBee3333/mcpengine)
+- Calendly API Docs: [https://developer.calendly.com](https://developer.calendly.com)
 
-### "Calendly API error: 404 Not Found"
-- The event UUID or resource doesn't exist
-- Check that you're using the correct UUID (not the event name)
-- UUIDs look like: `abc123de-f456-7890-gh12-ijklmnop3456`
+## Contributing
 
-### "Tools not appearing in Claude"
-- Restart Claude Desktop after updating `claude_desktop_config.json`
-- Verify the path is **absolute** (no `~` or relative paths)
-- Check that `npm run build` completed successfully
-- Look for the `dist/index.js` file
-
-### "event_uuid required"
-- Most event-specific calls need an event UUID
-- Get UUIDs via `list_events()` first
-- The UUID is in the event's `uri` field (last part of the URL)
-
-## 📖 Resources
-
-- [Calendly API Documentation](https://developer.calendly.com/)
-- [API & Webhooks Settings](https://calendly.com/integrations/api_webhooks)
-- [API Reference](https://developer.calendly.com/api-docs)
-- [MCP Protocol Specification](https://modelcontextprotocol.io/)
-- [Claude Desktop Setup](https://claude.ai/desktop)
-
-## 🤝 Contributing
-
-Contributions welcome! To add new Calendly API endpoints:
-
-1. Fork the repo
-2. Add tool definitions to `src/index.ts` (tools array)
-3. Implement handlers in `handleTool()` function
-4. Update README with new capabilities
-5. Submit a PR
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details
-
-## 🙏 Credits
-
-Built by [MCPEngage](https://mcpengage.com) — AI infrastructure for business software.
-
-**Want more MCP servers?** Check out our [full catalog](https://mcpengage.com) covering 30+ business platforms (Toast, Gusto, Stripe, QuickBooks, and more).
+Contributions welcome! Please open an issue or PR.
 
 ---
 
-**Questions?** Open an issue or join our [Discord community](https://discord.gg/mcpengage).
+Built with ❤️ using the Model Context Protocol
